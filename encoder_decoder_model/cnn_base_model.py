@@ -2,7 +2,7 @@
 # @Time    : 18-12-05
 # @Author  : Yang Jiao
 # @Site    : http://github.com/mrjiao2018
-# @File    : cnn_basenet.py
+# @File    : cnn_base_model.py
 # @IDE     : PyCharm Community Edition
 
 """
@@ -84,7 +84,7 @@ class CNNBaseModel(object):
                 conv = tf.concat(outputs, channel_axis)
 
             ret = tf.identity(tf.nn.bias_add(conv, b, data_format=data_format)
-                              if use_bias else conv, data_format=data_format)
+                              if use_bias else conv, name=name)
 
         return ret
 
@@ -109,11 +109,11 @@ class CNNBaseModel(object):
         return tf.nn.sigmoid(x=input_data, name=name)
 
     @staticmethod
-    def max_pooling(inputdata, kernel_size, stride=None, padding='VALID',
+    def max_pooling(input_data, kernel_size, stride=None, padding='VALID',
                    data_format='NHWC', name=None):
         """
 
-        :param inputdata:
+        :param input_data:
         :param kernel_size:
         :param stride:
         :param padding:
@@ -140,7 +140,7 @@ class CNNBaseModel(object):
             strides = [1, stride, stride, 1] if data_format == 'NHWC' \
                 else [1, 1, stride, stride]
 
-        return tf.nn.max_pool(value=inputdata, ksize=kernel, strides=strides, padding=padding,
+        return tf.nn.max_pool(value=input_data, ksize=kernel, strides=strides, padding=padding,
                               data_format=data_format, name=name)
 
     @staticmethod
@@ -263,11 +263,22 @@ class CNNBaseModel(object):
         if b_init is None:
             b_init = tf.constant_initializer()
 
-        ret = tf.layers.dense(inputs=inputdata, activation=lambda x: tf.identity(x, name='output'),
+        ret = tf.layers.dense(inputs=inputdata, activation=lambda x: tf.identity(x, name='output'),# activation???
                               use_bias=use_bias, name=name,
                               kernel_initializer=w_init, bias_initializer=b_init,
                               trainable=True, units=out_dim)
         return ret
+
+    @staticmethod
+    def layer_bn(input_data, is_training, name):
+        """
+
+        :param input_data:
+        :param is_training:
+        :param name:
+        :return:
+        """
+        return tf.layers.batch_normalization(inputs=input_data, training=is_training, name=name)
 
     @staticmethod
     def deconv2d(input_data, out_channel, kernel_size, padding='SAME',
