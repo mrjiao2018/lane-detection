@@ -11,6 +11,7 @@ from collections import OrderedDict
 import tensorflow as tf
 from encoder_decoder_model import cnn_base_model
 
+
 class VGG16Encoder(cnn_base_model.CNNBaseModel):
     """
     packing VGG16 neural network model

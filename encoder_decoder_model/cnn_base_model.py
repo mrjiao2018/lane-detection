@@ -12,6 +12,7 @@ the base convolution neural network mainly implements some useful cnn functions
 import tensorflow as tf
 import numpy as np
 
+
 class CNNBaseModel(object):
     """
     base model for other specific cnn models, such as vgg, fcn, denseNet
@@ -22,7 +23,7 @@ class CNNBaseModel(object):
 
     @staticmethod
     def conv2d(input_data, out_channel, kernel_size,
-              padding='SAME',  stride='1', w_init=None, b_init=None,
+              padding='SAME',  stride=1, w_init=None, b_init=None,
               split=1, use_bias=True, data_format='NHWC', name=None):
         """
         Packing the tensorflow conv2d function
@@ -144,13 +145,13 @@ class CNNBaseModel(object):
                               data_format=data_format, name=name)
 
     @staticmethod
-    def avg_pooling(inputdata, kernel_size, stride=None, padding='VALID',
+    def avg_pooling(input_data, kernel_size, stride=None, padding='VALID',
                    data_format='NHWC', name=None):
         """
 
 
         :param name:
-        :param inputdata:
+        :param input_data:
         :param kernel_size:
         :param stride:
         :param padding:
@@ -165,7 +166,7 @@ class CNNBaseModel(object):
 
         strides = [1, stride, stride, 1] if data_format == 'NHWC' else [1, 1, stride, stride]
 
-        return tf.nn.avg_pool(value=inputdata, ksize=kernel, strides=strides, padding=padding,
+        return tf.nn.avg_pool(value=input_data, ksize=kernel, strides=strides, padding=padding,
                               data_format=data_format, name=name)
 
     @staticmethod
